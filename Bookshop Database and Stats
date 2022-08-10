@@ -1,0 +1,35 @@
+--Create a bookshop database
+
+CREATE TABLE Bookshop (id INTEGER PRIMARY KEY, name TEXT, rating INTEGER, price INTEGER, pages INTEGER);
+
+INSERT INTO Bookshop VALUES
+(1, "Great Gatsby", 7, 15, 123),
+(2, "Great expectations", 8, 12, 321),
+(3, "Lolita", 7, 13, 242),
+(4, "Dorian Grey", 8, 8, 233),
+(5, "Dracula", 9, 11, 343),
+(6, "IT", 9, 20, 433),
+(7, "Game of thrones", 8, 19, 424),
+(8, "Twilight", 5, 10, 200),
+(9, "50 shades of Grey", 4, 15, 245),
+(10, "Carrie", 7, 10, 167),
+(11, "The Sandman", 6, 13, 398),
+(12, "Mulan", 9, 21, 98),
+(13, "Spider Man", 8, 18, 232),
+(14, "The Boys", 9, 27, 266),
+(15, "Pride and Prejudice", 9, 10, 200)
+;
+
+--display the database ordered by price. 
+SELECT * FROM Bookshop ORDER BY price desc;
+
+--what is the avg price of items with high rating? 
+SELECT AVG(price) "avg high rating books price"
+FROM Bookshop
+where rating >= 8; 
+
+--what are the least 5 popular items? 
+SELECT name, price, rating
+FROM Bookshop
+order by rating asc
+limit 5; 
