@@ -1,0 +1,89 @@
+/* Table of Arcane's characters */
+
+CREATE TABLE characters
+  (id INTEGER, name TEXT, hair_color TEXT, age INTEGER);
+  
+INSERT INTO characters VALUES (1, 'VI', 'pink', 23);
+INSERT INTO characters VALUES (2, 'Jinx', 'blue', 19);
+INSERT INTO characters VALUES (3, 'Ekko', 'white', 20);
+INSERT INTO characters VALUES (4, 'Jayce', 'brown', 31);
+INSERT INTO characters VALUES (5, 'Mel', 'brown', 33);
+INSERT INTO characters VALUES (6, 'Caitlyn', 'purple', 23);
+INSERT INTO characters VALUES (7, 'Sevika', 'black', 40);
+INSERT INTO characters VALUES (8, 'Silco', 'grey', 46);
+INSERT INTO characters VALUES (9, 'Vander', 'blonde', 45);
+INSERT INTO characters VALUES (10, 'Viktor', 'brown', 30);
+
+
+
+/* Table of Arcane's characters' statuses */
+
+CREATE TABLE statuses
+  (character_id INTEGER, status TEXT);
+  
+INSERT INTO statuses VALUES
+  (1, "alive"),
+  (2, "alive"),
+  (3, "alive"),
+  (4, "alive"),
+  (5, "alive"),
+  (6, "alive"),
+  (7, "alive"),
+  (8, "dead"),
+  (9, "dead"),
+  (10, "alive");
+  
+  
+  
+/* Table of Arcane's characters' relations */
+
+CREATE TABLE relations
+  (id INTEGER, character1_id INTEGER, character2_id INTEGER, relation TEXT);
+  
+INSERT INTO relations VALUES
+  (1, 1, 2, "siblings"),
+  (2, 1, 3, "siblings"),
+  (3, 3, 2, "siblings"),
+  (4, 4, 5, "lovers"),
+  (5, 4, 10, "friends"),
+  (6, 2, 8, "father-daughter"),
+  (7, 2, 9, "father-daughter"),
+  (8, 1, 8, "father-daughter"),
+  (9, 1, 6, "lovers"),
+  (10, 8, 9, "enemies"),
+  (11, 1, 9, "enemies"),
+  (12, 1, 7, "enemies");
+  
+
+
+/* Table of Arcane's alive characters */ 
+
+SELECT c.name, s.status 
+FROM characters as c
+JOIN statuses as s
+ON c.id = s.character_id
+WHERE s.status = "alive";
+
+
+
+/* Table of Arcane's relations */
+
+SELECT a.name, b.name, relation
+FROM relations
+JOIN characters a
+ON a.id = relations.character1_id
+JOIN characters b
+ON b.id = relations.character2_id;
+
+
+
+/* Table of VI's relations */
+
+SELECT b.name, relation
+FROM relations
+JOIN characters a
+ON a.id = relations.character1_id
+JOIN characters b
+ON b.id = relations.character2_id
+WHERE a.id = 1 OR b.id = 1;
+
