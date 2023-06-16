@@ -217,8 +217,8 @@ INSERT INTO countries(name,population,percent_one_year_change,population_change,
 
 /*What are the largest and the smallest countries by population*/
 
-SELECT name, MAX(population) FROM countries;
-SELECT name, MIN(population) FROM countries;
+SELECT name, MAX(population) AS max_population FROM countries;
+SELECT name, MIN(population) AS min_population FROM countries;
 
 
 
@@ -257,7 +257,7 @@ SELECT COUNT (*), SUM (population) AS "sum_population",
         WHEN median_age >= 40 THEN "40+"
         WHEN median_age >= 30 AND median_age < 40 THEN "30+"
         WHEN median_age >= 20 AND median_age < 30 THEN "20+"
-        ELSE "before 20"
+        ELSE "below 20"
         END AS "median_age_rate"
 FROM countries
 GROUP BY median_age_rate
