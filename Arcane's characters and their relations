@@ -31,7 +31,8 @@ INSERT INTO statuses VALUES
   (7, "alive"),
   (8, "dead"),
   (9, "dead"),
-  (10, "alive");
+  (10, "alive")
+;
   
   
   
@@ -42,48 +43,54 @@ CREATE TABLE relations
   
 INSERT INTO relations VALUES
   (1, 1, 2, "siblings"),
-  (2, 1, 3, "siblings"),
+  (2, 3, 1, "siblings"),
   (3, 3, 2, "siblings"),
   (4, 4, 5, "lovers"),
   (5, 4, 10, "friends"),
   (6, 2, 8, "father-daughter"),
   (7, 2, 9, "father-daughter"),
-  (8, 1, 8, "father-daughter"),
+  (8, 9, 1, "father-daughter"),
   (9, 1, 6, "lovers"),
   (10, 8, 9, "enemies"),
-  (11, 1, 9, "enemies"),
-  (12, 1, 7, "enemies");
+  (11, 1, 8, "enemies"),
+  (12, 7, 1, "enemies")
+;
   
 
 
 /* Table of Arcane's alive characters */ 
 
-SELECT c.name, s.status 
-FROM characters as c
-JOIN statuses as s
+SELECT c.name, s.status
+FROM characters AS c
+LEFT JOIN statuses AS s
 ON c.id = s.character_id
-WHERE s.status = "alive";
+WHERE s.status = "alive"
+;
 
 
 
 /* Table of Arcane's relations */
 
-SELECT a.name, b.name, relation
-FROM relations
-JOIN characters a
-ON a.id = relations.character1_id
-JOIN characters b
-ON b.id = relations.character2_id;
+SELECT c1.name, c2.name, r.relation
+FROM relations AS r
+JOIN characters AS c1
+ON c1.id = r.character1_id
+JOIN characters AS c2
+ON c2.id = r.character2_id
+;
 
 
 
-/* Table of VI's relations */
+/* Table of VI's relations and their status*/
 
-SELECT b.name, relation
-FROM relations
-JOIN characters a
-ON a.id = relations.character1_id
-JOIN characters b
-ON b.id = relations.character2_id
-WHERE a.id = 1 OR b.id = 1;
-
+SELECT c1.name, c2.name, r.relation, s.status AS relations_status
+FROM relations AS r
+JOIN characters As c1
+ON c1.id = r.character1_id
+JOIN characters AS c2
+ON c2.id = r.character2_id
+JOIN statuses AS s
+ON r.character1_id = s.character_id OR r.character2_id = s.character_id
+WHERE (r.character1_id = 1 OR r.character2_id = 1)
+AND s.character_id != 1
+;
