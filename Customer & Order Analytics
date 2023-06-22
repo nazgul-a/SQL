@@ -1,14 +1,14 @@
-#In this SQL, I'm querying a database with multiple tables in it to quantify statistics about customer and order data. 
+/* In this SQL, I'm querying a database with multiple tables in it to quantify statistics about customer and order data. */
 
 
-#1. How many orders were placed in January? 
+/* #1. How many orders were placed in January? */
 SELECT COUNT(*) FROM BIT_DB.JanSales
 WHERE length(orderID) = 6
 AND orderID <> 'Order ID'
 ;
 
 
-#2. How many of those orders were for an iPhone? 
+/* #2. How many of those orders were for an iPhone? */
 SELECT COUNT(*) FROM BIT_DB.JanSales
 WHERE length(orderID) = 6
 AND orderID <> 'Order ID'
@@ -16,14 +16,14 @@ AND Product = 'iPhone'
 ;
 
 
-#3. Select the customer account numbers for all the orders that were placed in February. 
+/* #3. Select the customer account numbers for all the orders that were placed in February. */
 SELECT c.acctnum FROM BIT_DB.customers AS c
 RIGHT JOIN BIT_DB.FebSales AS f
 ON c.order_id = f.orderID
 ;
 
 
-#4. Which product was the cheapest one sold in January, and what was the price? 
+/* #4. Which product was the cheapest one sold in January, and what was the price? */
 SELECT Product, price
 FROM BIT_DB.JanSales
 WHERE length(orderID) = 6
@@ -34,7 +34,7 @@ LIMIT 1
 ;
 
 
-#5. What is the total revenue for each product sold in January?
+/* #5. What is the total revenue for each product sold in January?*/
 SELECT Product, price * SUM(Quantity) AS revenue
 FROM BIT_DB.JanSales
 WHERE length(orderID) = 6
@@ -43,7 +43,7 @@ GROUP BY Product
 ;
 
 
-#6. Which products were sold in February at 548 Lincoln St, Seattle, WA 98101, how many of each were sold, and what was the total revenue?
+/* #6. Which products were sold in February at 548 Lincoln St, Seattle, WA 98101, how many of each were sold, and what was the total revenue? */
 SELECT Product, SUM(Quantity), price * SUM(Quantity) AS revenue
 FROM BIT_DB.FebSales
 WHERE length(orderID) = 6
@@ -53,7 +53,7 @@ GROUP BY Product
 ;
 
 
-#7. How many customers ordered more than 2 products at a time, and what was the average amount spent for those customers? 
+/* #7. How many customers ordered more than 2 products at a time, and what was the average amount spent for those customers? */
 SELECT COUNT(c.acctnum), AVG(f.price * f.Quantity) AS avg_spent
 FROM BIT_DB.FebSales AS f
 LEFT JOIN BIT_DB.customers AS c
@@ -64,7 +64,7 @@ AND f.orderID <> 'Order ID'
 ;
 
 
-#8. List all the products sold in Los Angeles in February, and include how many of each were sold.
+/* #8. List all the products sold in Los Angeles in February, and include how many of each were sold. */
 SELECT Product, SUM(QUantity)
 FROM BIT_DB.FebSales
 WHERE length(orderID) = 6
@@ -72,3 +72,54 @@ AND orderID <> 'Order ID'
 AND location LIKE '%Los Angeles%'
 GROUP BY Product
 ;
+
+
+/* #9. Which locations in New York received at least 3 orders in January, and how many orders did they each receive? */
+SELECT location, COUNT(orderID) AS order_count
+FROM BIT_DB.JanSales
+WHERE length(orderID) = 6
+AND orderID <> 'Order ID'
+AND location LIKE '%New York%'
+GROUP BY location
+HAVING COUNT(orderID) >= 3
+;
+
+
+/* #10. How many of each type of headphone were sold in February? */
+SELECT Product, SUM(Quantity) AS total_sold
+FROM BIT_DB.FebSales
+WHERE length(orderID) = 6
+AND orderID <> 'Order ID'
+AND Product LIKE '%headphone%'
+GROUP BY Product
+;
+
+
+/* #11. What was the average amount spent per account in February? */
+SELECT AVG (price * Quantity) AS avg_spent
+FROM BIT_DB.FebSales f
+INNER JOIN BIT_DB.customers c 
+ON f.orderID = c.order_id
+WHERE c.order_id <> 'Order ID'
+AND length(c.order_id) = 6
+;
+
+
+/* #12. What was the average quantity of products purchased per account in February?  */
+SELECT SUM(f.Quantity)/COUNT(c.acctnum) AS avg_qntt
+FROM BIT_DB.FebSales f
+INNER JOIN BIT_DB.customers c
+ON c.order_id = f.orderID
+WHERE length(f.orderID) = 6
+AND f.orderID <> 'Order ID'
+;
+
+
+/* #13. Which product brought in the most revenue in January and how much revenue did it bring in total? */
+SELECT Product, SUM(Quantity * price) AS revenue
+FROM BIT_DB.JanSales
+WHERE length(orderID) = 6
+AND orderID <> 'Order ID'
+GROUP BY Product
+ORDER BY revenue DESC
+LIMIT 1;
